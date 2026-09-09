@@ -1,0 +1,78 @@
+name: Bootstrap GitHub metadata
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/bootstrap-project.yml
+      - .github/project-metadata.json
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: github-metadata-bootstrap
+  cancel-in-progress: false
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Load project metadata
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          gh api "repos/$GH_REPO/contents/.github/project-metadata.json?ref=$GITHUB_SHA" --jq .content \
+            | base64 --decode > /tmp/project-metadata.json
+          jq empty /tmp/project-metadata.json
+
+      - name: Configure labels and milestones
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          jq -c '.labels[]' /tmp/project-metadata.json | while read -r label; do
+            name=$(jq -r '.name' <<<"$label")
+            color=$(jq -r '.color' <<<"$label")
+            description=$(jq -r '.description' <<<"$label")
+            encoded_name=$(printf '%s' "$name" | jq -sRr @uri)
+
+            if gh api "repos/$GH_REPO/labels/$encoded_name" >/dev/null 2>&1; then
+              gh api --method PATCH "repos/$GH_REPO/labels/$encoded_name" \
+                -f new_name="$name" \
+                -f color="$color" \
+                -f description="$description" >/dev/null
+            else
+              gh api --method POST "repos/$GH_REPO/labels" \
+                -f name="$name" \
+                -f color="$color" \
+                -f description="$description" >/dev/null
+            fi
+          done
+
+          jq -c '.milestones[]' /tmp/project-metadata.json | while read -r milestone; do
+            title=$(jq -r '.title' <<<"$milestone")
+            description=$(jq -r '.description' <<<"$milestone")
+            number=$(gh api --paginate "repos/$GH_REPO/milestones?state=all&per_page=100" \
+              --jq ".[] | select(.title == \"$title\") | .number" | head -n1)
+
+            if [[ -n "$number" ]]; then
+              gh api --method PATCH "repos/$GH_REPO/milestones/$number" \
+                -f title="$title" \
+                -f description="$description" \
+                -f state=open >/dev/null
+            else
+              gh api --method POST "repos/$GH_REPO/milestones" \
+                -f title="$title" \
+                -f description="$description" >/dev/null
+            fi
+          done
