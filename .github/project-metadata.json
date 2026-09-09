@@ -1,0 +1,43 @@
+{
+  "labels": [
+    {"name":"type: feature","color":"1D76DB","description":"New user-facing capability"},
+    {"name":"type: enhancement","color":"A2EEEF","description":"Improvement to an existing capability"},
+    {"name":"type: bug","color":"D73A4A","description":"Unexpected or incorrect behavior"},
+    {"name":"type: chore","color":"D4C5F9","description":"Maintenance, tooling, or repository work"},
+    {"name":"type: docs","color":"0075CA","description":"Documentation work"},
+    {"name":"type: test","color":"BFD4F2","description":"Automated or manual testing work"},
+    {"name":"priority: critical","color":"B60205","description":"Blocks the project or threatens data/security"},
+    {"name":"priority: high","color":"D93F0B","description":"Important for the current milestone"},
+    {"name":"priority: medium","color":"FBCA04","description":"Normal priority"},
+    {"name":"priority: low","color":"0E8A16","description":"Can be deferred without blocking the milestone"},
+    {"name":"weight: 1","color":"C2E0C6","description":"Very small, isolated change"},
+    {"name":"weight: 2","color":"C2E0C6","description":"Small change"},
+    {"name":"weight: 3","color":"FEF2C0","description":"Moderate change"},
+    {"name":"weight: 5","color":"F9D0C4","description":"Large change"},
+    {"name":"weight: 8","color":"E99695","description":"Very large change that should be split when possible"},
+    {"name":"area: foundation","color":"5319E7","description":"Project foundation, tooling, CI/CD, and repository configuration"},
+    {"name":"area: groups","color":"5319E7","description":"Groups, membership, invitations, and authorization"},
+    {"name":"area: inventory","color":"5319E7","description":"Stock items, quantities, units, and inventory movements"},
+    {"name":"area: shopping","color":"5319E7","description":"Shopping list and purchase demands"},
+    {"name":"area: recurrence","color":"5319E7","description":"Recurring purchasing rules and scheduling"},
+    {"name":"area: recipes","color":"5319E7","description":"Recipe catalog, ingredients, sources, and normalization"},
+    {"name":"area: recommendations","color":"5319E7","description":"Recipe matching, ranking, and explanations"},
+    {"name":"area: meal-planning","color":"5319E7","description":"Meal intents, planning, demand provenance, and cancellation"},
+    {"name":"area: ai","color":"5319E7","description":"LLM agents, structured intents, tools, and safety boundaries"},
+    {"name":"area: release","color":"5319E7","description":"MVP hardening, release readiness, and deployment"},
+    {"name":"dependencies","color":"0366D6","description":"Dependency updates"},
+    {"name":"skip-changelog","color":"EDEDED","description":"Exclude from generated release notes"}
+  ],
+  "milestones": [
+    {"title":"M0 - Foundation","description":"Establish the technical and repository foundation for YummYummy: Laravel + Vue, Sail, PostgreSQL/Redis, authentication baseline, quality gates, CI/CD, and reproducible local development. Exit criterion: contributors can clone, start, test, and build the project consistently."},
+    {"title":"M1 - Groups & Members","description":"Introduce the shared household/group boundary. Users can create and join groups, manage membership, and all domain data is correctly scoped and authorized by group. Exit criterion: cross-group data leakage is prevented by design and tests."},
+    {"title":"M2 - Inventory","description":"Deliver the source of truth for what a group currently has: generic items such as macarrao 500 g, quantities, units, adjustments, and auditable inventory movements. Exit criterion: stock changes are deterministic and traceable."},
+    {"title":"M3 - Shopping List","description":"Deliver a shared shopping list backed by explicit purchase demand rather than opaque quantity mutation. Items can be added, changed, removed, completed, and converted into inventory. Exit criterion: purchase actions and stock updates remain consistent."},
+    {"title":"M4 - Recurring Purchases","description":"Automate repeat purchases using configurable intervals such as 3 days, 2 weeks, or 4 months. Rules generate idempotent shopping demand at the correct time and can be paused, resumed, or changed. Exit criterion: recurrence does not duplicate demand across scheduler runs."},
+    {"title":"M5 - Recipe Catalog","description":"Create YummYummy's canonical recipe representation independent of source. Recipes contain portions, ingredients, quantities, units, steps, metadata, and provenance, allowing later import from datasets/APIs and AI-generated adaptations. Exit criterion: every recipe source normalizes to the same internal contract."},
+    {"title":"M6 - Recipe Matching","description":"Recommend recipes deterministically from current inventory. Compute ingredient coverage, missing quantities, useful ranking factors, and explain why a recipe is suggested. Exit criterion: users can see what they can cook now and what is nearly available without relying on an LLM."},
+    {"title":"M7 - Meal Intent & Planning","description":"Represent explicit user intent to cook/eat a dish. Requested meals receive ranking priority and badges, generate attributable shopping demand for missing ingredients, and can be cancelled without corrupting unrelated demand. Exit criterion: add/increment and reversal are provenance-safe."},
+    {"title":"M8 - YummYummy AI","description":"Add natural-language interaction on top of existing deterministic application services. The LLM interprets requests into structured intents and approved tools but never mutates stock or shopping state directly. Exit criterion: common recipe/planning requests are safe, reversible, validated, and observable."},
+    {"title":"M9 - MVP Release","description":"Harden the complete MVP journey for release: UX states, security, authorization, validation, accessibility, responsiveness, tests, performance baseline, seeds/demo data, deployment documentation, and end-to-end acceptance. Exit criterion: the full household-to-recipe-to-shopping-to-inventory flow is production-ready."}
+  ]
+}
